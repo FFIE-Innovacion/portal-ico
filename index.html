@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Portal I.CO · FFIE · Producción v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --vino:#8B1A32;--vino2:#6f1328;--azul:#17324d;--azul2:#1f4c77;--verde:#13795b;--oro:#a16a00;
+  --bg:#f4f7fb;--card:#ffffff;--line:#dce5ef;--muted:#64778a;--text:#213447;
+  --soft-vino:#fdf1f4;--soft-azul:#edf5fc;--soft-verde:#ebf8f2;--soft-oro:#fff6df;
+  --radius:18px;--radius-sm:12px;--shadow:0 8px 28px rgba(23,50,77,.08);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--text)}
+body{min-height:100vh}
+button,input,select,textarea{font:inherit}
+a{text-decoration:none;color:inherit}
+
+/* ── topbar ── */
+.topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:16px;padding:14px 20px;
+  background:linear-gradient(90deg,var(--azul),var(--azul2));color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.22)}
+.brand{display:flex;align-items:center;gap:12px;min-width:260px}
+.brand-badge{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--vino),#bc2f52);
+  display:flex;align-items:center;justify-content:center;font-weight:800;flex:0 0 auto;font-size:13px}
+.brand h1{margin:0;font-size:15px;line-height:1.15}
+.brand p{margin:2px 0 0;color:rgba(255,255,255,.72);font-size:11px}
+.nav-wrap{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.nav-toggle{display:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);
+  color:#fff;padding:10px 12px;border-radius:10px;font-weight:800;cursor:pointer}
+.nav{display:flex;gap:6px;flex-wrap:wrap;flex:1;min-width:0}
+.nav button{border:0;background:transparent;color:rgba(255,255,255,.74);padding:10px 12px;
+  border-radius:10px;font-weight:700;font-size:12px;cursor:pointer;white-space:nowrap;transition:all .15s}
+.nav button.active,.nav button:hover{background:rgba(255,255,255,.11);color:#fff}
+.userbox{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.status-dot{width:10px;height:10px;border-radius:50%;background:#bbb;flex:0 0 auto}
+.status-dot.ok{background:#21c17a}.status-dot.off{background:#d64045}
+
+/* ── pages ── */
+.page{display:none}.page.active{display:block}
+.container{max-width:1280px;margin:0 auto;padding:22px}
+
+/* ── hero ── */
+.hero{background:linear-gradient(135deg,var(--azul),var(--vino));color:#fff;border-radius:28px;
+  padding:26px 28px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.hero:after{content:'';position:absolute;right:-40px;bottom:-60px;width:210px;height:210px;
+  border-radius:50%;background:rgba(255,255,255,.06)}
+.hero small{display:inline-flex;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.12);
+  font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.hero h2{margin:12px 0 10px;font-size:34px;line-height:1.08;max-width:780px}
+.hero p{margin:0;max-width:860px;color:rgba(255,255,255,.84);line-height:1.65}
+.actions-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+
+/* ── buttons ── */
+.btn{border:0;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{opacity:.88;transform:translateY(-1px)}
+.btn-primary{background:var(--vino);color:#fff}
+.btn-secondary{background:#fff;color:var(--azul)}
+.btn-outline{background:transparent;color:var(--azul);border:1.5px solid var(--line)}
+.btn-green{background:var(--verde);color:#fff}
+.btn-sm{padding:8px 12px;font-size:12px;border-radius:10px}
+
+/* ── grids ── */
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+.grid-2{display:grid;grid-template-columns:1.15fr 1fr;gap:14px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+
+/* ── kpi ── */
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;
+  box-shadow:var(--shadow);position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--azul)}
+.kpi.vino::before{background:var(--vino)}
+.kpi.verde::before{background:var(--verde)}
+.kpi.oro::before{background:var(--oro)}
+.kpi small{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:800}
+.kpi strong{display:block;font-size:30px;margin:6px 0 4px}
+.kpi span{color:var(--muted);font-size:12px}
+
+/* ── card ── */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.card-head{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;
+  justify-content:space-between;gap:12px}
+.card-head h3{margin:0;font-size:15px}
+.card-head p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.card-body{padding:18px}
+.section-title{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 0 12px}
+.section-title .tag{background:var(--soft-vino);color:var(--vino);font-size:11px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.06em;padding:6px 10px;border-radius:999px}
+.section-title h2{margin:0;font-size:18px}
+.info-card{padding:18px}
+.info-card h4{margin:0 0 8px;font-size:15px;color:var(--azul)}
+.info-card p,.info-card li{font-size:13px;line-height:1.65;color:var(--text)}
+.info-card ul{margin:8px 0 0;padding-left:18px}
+
+/* ── form ── */
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-size:12px;font-weight:800;color:var(--azul)}
+.form-group input,.form-group select,.form-group textarea{
+  width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:12px;background:#fff;outline:none;transition:border-color .15s}
+.form-group textarea{min-height:90px;resize:vertical}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{
+  border-color:var(--vino);box-shadow:0 0 0 3px rgba(139,26,50,.08)}
+.help{font-size:11px;color:var(--muted);line-height:1.5;background:var(--soft-azul);
+  border:1px solid #cfe0f1;border-radius:10px;padding:8px 10px}
+.note{padding:12px 14px;border-radius:12px;font-size:12px;line-height:1.6;margin-bottom:14px}
+.note.blue{background:var(--soft-azul);border:1px solid #cfe0f1;color:var(--azul2)}
+.note.gold{background:var(--soft-oro);border:1px solid #f0d487;color:#7b5b00}
+.note.green{background:var(--soft-verde);border:1px solid #b9e1d2;color:#0e6f52}
+
+/* ── badges ── */
+.badge{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800}
+.badge.bp{background:#e8f2ff;color:#1565c0}
+.badge.la{background:var(--soft-vino);color:var(--vino)}
+.badge.validado{background:var(--soft-verde);color:var(--verde)}
+.badge.radicado{background:#eef3f8;color:#4c6276}
+.badge.ajustes{background:var(--soft-oro);color:var(--oro)}
+.badge.rechazado{background:#fce9ea;color:#be2f39}
+.badge.admin{background:#ede9fe;color:#5b21b6}
+
+/* ── table ── */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:11px 12px;border-bottom:1px solid var(--line);font-size:12px;text-align:left;vertical-align:top}
+th{background:#f7f9fc;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+tbody tr:hover{background:#fafcff}
+.mono{font-family:Consolas,monospace;font-size:12px;font-weight:800;color:var(--azul)}
+
+/* ── login ── */
+.login-box{max-width:480px;margin:32px auto}
+.login-state{margin-top:10px;font-size:12px;color:var(--muted)}
+.locked{opacity:.55;pointer-events:none;filter:grayscale(.1)}
+
+/* ── modal ── */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.58);display:none;
+  align-items:flex-start;justify-content:center;padding:28px 16px;overflow:auto;z-index:100}
+.modal-backdrop.open{display:flex}
+.modal{width:min(940px,100%);background:#fff;border-radius:20px;overflow:hidden;
+  box-shadow:0 24px 56px rgba(0,0,0,.26)}
+.modal-head{padding:14px 18px;background:#f7f9fc;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;gap:12px}
+.modal-body{padding:0}
+
+/* ── ficha ── */
+.ficha{background:#fff}
+.ficha-header{display:flex;justify-content:space-between;gap:16px;padding:22px;
+  background:linear-gradient(135deg,var(--azul),var(--vino));color:#fff}
+.ficha-brand strong{display:block;font-size:15px}
+.ficha-brand span{display:block;color:rgba(255,255,255,.72);font-size:11px;margin-top:4px}
+.ficha-id{font-family:Consolas,monospace;font-size:19px;font-weight:800;background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.22);padding:8px 14px;border-radius:12px}
+.ficha-body{padding:18px 22px}
+.ficha-section{margin-bottom:16px}
+.ficha-section h4{margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.ficha-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.ficha-item{background:#f9fbfd;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.ficha-item small{display:block;color:var(--muted);font-size:10px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.ficha-item div{font-size:12px;line-height:1.55}
+.ficha-item.full{grid-column:1/-1}
+.ficha-footer{padding:10px 22px;background:#f7f9fc;border-top:1px solid var(--line);
+  font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
+.footer-space{height:20px}
+
+/* ── code block ── */
+.code-block{background:#0f1720;color:#d9e4ee;border-radius:14px;padding:14px;
+  white-space:pre-wrap;font-family:Consolas,monospace;font-size:11px;line-height:1.55;max-height:500px;overflow:auto}
+
+/* ── bar chart ── */
+.bar-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);font-size:12px}
+.bar-row:last-child{border-bottom:0}
+.bar-label{min-width:120px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.bar-track{flex:1;background:#eef2f7;border-radius:999px;height:10px;overflow:hidden}
+.bar-fill{height:100%;border-radius:999px;background:var(--azul);transition:width .4s}
+.bar-count{min-width:28px;text-align:right;color:var(--muted);font-weight:700}
+
+/* ── toast ── */
+#toastContainer{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px}
+.toast{background:#213447;color:#fff;border-radius:12px;padding:12px 18px;font-size:13px;font-weight:600;
+  box-shadow:0 8px 24px rgba(0,0,0,.22);animation:toastIn .25s ease;max-width:320px}
+.toast.ok{background:var(--verde)}.toast.err{background:#be2f39}
+@keyframes toastIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* ── print ── */
+@media print{
+  body{background:#fff}
+  .topbar,.modal-backdrop{display:none!important}
+}
+
+/* ── responsive ── */
+@media (max-width:1180px){
+  .grid-4{grid-template-columns:repeat(2,1fr)}
+  .grid-3{grid-template-columns:repeat(2,1fr)}
+  .grid-2{grid-template-columns:1fr}
+}
+@media (max-width:980px){
+  .topbar{flex-wrap:wrap;align-items:flex-start}
+  .brand{min-width:auto;flex:1}
+  .nav-wrap{width:100%;display:block}
+  .nav-toggle{display:inline-flex;align-items:center;justify-content:center;margin:2px 0 10px}
+  .nav{display:none;flex-direction:column;width:100%;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:8px}
+  .nav.open{display:flex}
+  .nav button{width:100%;text-align:left}
+  .userbox{width:100%;justify-content:space-between}
+  .hero{padding:22px 18px}
+  .hero h2{font-size:28px}
+  .container{padding:16px}
+  .grid-4,.grid-3,.grid-2,.form-grid,.ficha-grid{grid-template-columns:1fr}
+  .card-head,.modal-head,.ficha-header,.ficha-footer{flex-direction:column;align-items:flex-start}
+  .modal{width:min(100%,940px)}
+}
+@media (max-width:640px){
+  .topbar{padding:12px 14px}
+  .hero h2{font-size:22px}
+  .btn{justify-content:center}
+  .actions-row .btn,.toolbar .btn{width:100%}
+  th,td{padding:10px 8px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ TOPBAR ═══════════════════ -->
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-badge">I.CO</div>
+    <div>
+      <h1>Portal I.CO · FFIE</h1>
+      <p>DISGI · Gestión del Conocimiento Organizacional</p>
+    </div>
+  </div>
+  <div class="nav-wrap">
+    <button class="nav-toggle" id="navToggle" onclick="toggleNav()">☰ Menú</button>
+    <nav class="nav" id="mainNav">
+      <button class="active" data-target="modelo"     onclick="showPage('modelo',this)">Modelo I.CO</button>
+      <button            data-target="ico01"      onclick="showPage('ico01',this)">I.CO-01 Registro</button>
+      <button            data-target="ico02"      onclick="showPage('ico02',this)">I.CO-02 Validación</button>
+      <button            data-target="ico03"      onclick="showPage('ico03',this)">I.CO-03 Evaluación</button>
+      <button            data-target="repositorio" onclick="showPage('repositorio',this)">Consulta y fichas</button>
+      <button            data-target="dashboard"  onclick="showPage('dashboard',this)">Dashboard</button>
+      <button            data-target="config"     onclick="showPage('config',this)">Configuración</button>
+    </nav>
+  </div>
+  <div class="userbox">
+    <div id="apiStatus" class="status-dot off" title="Estado API"></div>
+    <span id="loginBadge" class="badge radicado">Público</span>
+    <button class="btn btn-secondary btn-sm" id="loginBtnTop" onclick="toggleLoginPanel()">Iniciar sesión</button>
+  </div>
+</header>
+
+<!-- ═══════════════════ PÁGINA: MODELO ═══════════════════ -->
+<section id="modelo" class="page active">
+  <div class="container">
+    <div class="hero">
+      <small>Modelo institucional FFIE</small>
+      <h2>Registrar, validar, evaluar y reutilizar conocimiento útil para la gestión institucional</h2>
+      <p>El Portal I.CO convierte experiencias documentadas en conocimiento trazable para decisiones, mejora continua, control interno, memoria organizacional y replicabilidad institucional.</p>
+      <div class="actions-row">
+        <button class="btn btn-secondary" onclick="showPage('ico01',document.querySelector('[data-target=ico01]'))">Registrar experiencia</button>
+        <button class="btn btn-secondary" onclick="showPage('repositorio',document.querySelector('[data-target=repositorio]'))">Consultar fichas</button>
+        <button class="btn btn-secondary" onclick="showPage('dashboard',document.querySelector('[data-target=dashboard]'))">Ver Dashboard</button>
+      </div>
+    </div>
+
+    <div class="grid-4">
+      <div class="kpi"><small>I.CO-01</small><strong>Registro</strong><span>Captura inicial de BP y LA con soporte y recomendación.</span></div>
+      <div class="kpi vino"><small>I.CO-02</small><strong>Validación</strong><span>Revisión por Profesional Validador o Comité.</span></div>
+      <div class="kpi verde"><small>I.CO-03</small><strong>Evaluación</strong><span>Uso ex post, resultados e Índice I.CO.</span></div>
+      <div class="kpi oro"><small>Repositorio</small><strong>Fichas</strong><span>Consulta pública de fichas validadas y trazables.</span></div>
+    </div>
+
+    <div class="section-title"><span class="tag">Definiciones</span><h2>Buena Práctica vs Lección Aprendida</h2></div>
+    <div class="grid-2">
+      <div class="card info-card">
+        <span class="badge bp">Buena Práctica</span>
+        <h4>Experiencia exitosa, útil y potencialmente replicable</h4>
+        <p>Se registra cuando una acción produce resultados positivos verificables y puede institucionalizarse en otras dependencias.</p>
+        <ul>
+          <li>Enfatiza <strong>qué funcionó</strong> y por qué conviene sostenerlo.</li>
+          <li>Ejemplos: tablero automatizado; estandarización de clausulados; mesa de ayuda con SLA.</li>
+        </ul>
+      </div>
+      <div class="card info-card">
+        <span class="badge la">Lección Aprendida</span>
+        <h4>Conocimiento derivado de una experiencia con aprendizaje útil</h4>
+        <p>Se registra cuando la organización identifica un hallazgo que permite prevenir errores o mejorar decisiones.</p>
+        <ul>
+          <li>Enfatiza <strong>qué se aprendió</strong> y qué debe corregirse o evitarse.</li>
+          <li>Ejemplos: falta de soporte documental; dependencia de una persona; demoras por versiones inconsistentes.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-title"><span class="tag">Acceso</span><h2>Control de acceso por roles</h2></div>
+    <div class="card info-card">
+      <ul>
+        <li><strong>Público:</strong> consulta, busca, ve ficha e imprime sin login.</li>
+        <li><strong>Profesional Validador:</strong> registra I.CO-02 y consulta fichas completas.</li>
+        <li><strong>Comité de Validación:</strong> registra I.CO-02 e I.CO-03.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ PÁGINA: I.CO-01 ═══════════════════ -->
+<section id="ico01" class="page">
+  <div class="container">
+    <div class="section-title"><span class="tag">Formulario público</span><h2>I.CO-01 · Registro inicial de Buena Práctica o Lección Aprendida</h2></div>
+    <div class="card">
+      <div class="card-body">
+        <div class="note blue">Formulario público. El código <strong>ID_ICO</strong> se genera automáticamente. Se guarda en la hoja <strong>I_CO_01</strong> en estado <strong>Radicado</strong>.</div>
+        <div class="form-grid">
+          <div class="form-group"><label>Fecha de registro *</label><input id="f1_fecha" type="date"></div>
+          <div class="form-group"><label>Tipo de registro *</label>
+            <select id="f1_tipo"><option value="">Seleccione</option><option value="BP">Buena Práctica</option><option value="LA">Lección Aprendida</option></select>
+          </div>
+          <div class="form-group"><label>Dirección / Dependencia líder *</label><input id="f1_direccion" placeholder="Ej. DISGI"></div>
+          <div class="form-group"><label>Área / Equipo responsable *</label><input id="f1_area" placeholder="Ej. Innovación y Analítica"></div>
+          <div class="form-group"><label>Proceso asociado</label><input id="f1_proceso" placeholder="Ej. Seguimiento"></div>
+          <div class="form-group"><label>Fase del ciclo</label>
+            <select id="f1_fase"><option value="">Seleccione</option><option>Planeación</option><option>Contratación</option><option>Ejecución</option><option>Supervisión</option><option>Cierre</option><option>Transversal</option></select>
+          </div>
+          <div class="form-group full"><label>Contexto / situación inicial *</label>
+            <textarea id="f1_contexto"></textarea>
+            <div class="help">Explique el problema, reto o necesidad que originó la experiencia.</div>
+          </div>
+          <div class="form-group full"><label>Objetivo perseguido</label><textarea id="f1_objetivo"></textarea></div>
+          <div class="form-group full"><label>Acción implementada *</label>
+            <textarea id="f1_accion"></textarea>
+            <div class="help">Describa claramente qué se hizo, con qué herramientas y en qué secuencia.</div>
+          </div>
+          <div class="form-group full"><label>Actores involucrados</label><textarea id="f1_actores"></textarea></div>
+          <div class="form-group full"><label>Resultado observado</label><textarea id="f1_resultado"></textarea></div>
+          <div class="form-group full"><label>Evidencias / radicados / enlaces</label><textarea id="f1_evidencias"></textarea></div>
+          <div class="form-group"><label>Impacto en tiempo (días)</label><input id="f1_tiempo" type="number" min="0"></div>
+          <div class="form-group"><label>Impacto en costo (COP)</label><input id="f1_costo" type="number" min="0" step="1000"></div>
+          <div class="form-group full"><label>Impacto en calidad / control</label><textarea id="f1_calidad"></textarea></div>
+          <div class="form-group"><label>Replicabilidad</label>
+            <select id="f1_replicabilidad"><option value="">Seleccione</option><option>Alta</option><option>Media</option><option>Baja</option></select>
+          </div>
+          <div class="form-group"><label>Riesgos / consideraciones</label><input id="f1_riesgos"></div>
+          <div class="form-group full"><label>Recomendación / institucionalización *</label><textarea id="f1_recomendacion"></textarea></div>
+          <div class="form-group"><label>Nombre del registrante</label><input id="f1_nombre"></div>
+          <div class="form-group"><label>Cargo del registrante</label><input id="f1_cargo"></div>
+          <div class="form-group"><label>Correo institucional</label><input id="f1_correo" type="email"></div>
+          <div class="form-group"><label>Autoriza contacto</label>
+            <select id="f1_contacto"><option value="">Seleccione</option><option>Sí</option><option>No</option></select>
+          </div>
+        </div>
+        <div class="actions-row">
+          <button class="btn btn-green" onclick="submitICO01()">💾 Guardar I.CO-01</button>
+          <button class="btn btn-outline" onclick="clearFormICO01()">Limpiar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ PÁGINA: I.CO-02 ═══════════════════ -->
+<section id="ico02" class="page">
+  <div class="container">
+    <div class="section-title"><span class="tag">Formulario restringido</span><h2>I.CO-02 · Validación</h2></div>
+    <div id="ico02LockMsg" class="note gold">Debe iniciar sesión como <strong>Profesional Validador</strong> o <strong>Comité de Validación</strong> para registrar la validación. La búsqueda y la ficha sí están disponibles.</div>
+    <div class="card">
+      <div class="card-body">
+        <div class="toolbar">
+          <div class="form-group" style="min-width:220px"><label>ID_ICO a consultar</label><input id="f2_lookup" placeholder="ICO-2026-0001" onkeydown="if(event.key==='Enter')buscarRegistroParaValidacion()"></div>
+          <button class="btn btn-secondary btn-sm" onclick="buscarRegistroParaValidacion()">🔍 Buscar</button>
+          <button class="btn btn-outline btn-sm" onclick="openFichaByInput('f2_lookup')">📄 Ver ficha</button>
+        </div>
+        <div id="f2_info" class="note blue" style="display:none;margin-top:14px"></div>
+        <div id="ico02FormWrap" class="locked" style="margin-top:14px">
+          <div class="form-grid">
+            <div class="form-group"><label>Fecha de validación</label><input id="f2_fecha" type="date"></div>
+            <div class="form-group"><label>Dependencia que valida</label>
+              <select id="f2_dependencia"><option value="">Seleccione</option><option>DISGI</option><option>Comité de Validación</option><option>Otra</option></select>
+            </div>
+            <div class="form-group"><label>Nombre del validador</label><input id="f2_validador"></div>
+            <div class="form-group"><label>Rol del validador</label>
+              <select id="f2_rol"><option value="">Seleccione</option><option>Profesional Validador</option><option>Comité de Validación</option></select>
+            </div>
+            <div class="form-group"><label>Correo del validador</label><input id="f2_correo" type="email"></div>
+            <div class="form-group"><label>Suficiencia de evidencia</label>
+              <select id="f2_suficiencia"><option value="">Seleccione</option><option>Suficiente</option><option>Parcial</option><option>Insuficiente</option></select>
+            </div>
+            <div class="form-group full"><label>Tipos de evidencia revisada</label><input id="f2_tipos" placeholder="Ej. Acta, informe técnico, base de datos"></div>
+            <div class="form-group full"><label>Referencia de evidencia / radicado / enlace</label><textarea id="f2_referencia"></textarea></div>
+            <div class="form-group full"><label>Brechas o faltantes</label><textarea id="f2_brechas"></textarea></div>
+            <div class="form-group"><label>Decisión *</label>
+              <select id="f2_decision"><option value="">Seleccione</option><option value="Validado">Validado</option><option value="Requiere ajustes">Requiere ajustes</option><option value="Rechazado">Rechazado</option></select>
+            </div>
+            <div class="form-group"><label>Clasificación de riesgo</label>
+              <select id="f2_riesgo"><option value="">Seleccione</option><option>Bajo</option><option>Medio</option><option>Alto</option></select>
+            </div>
+            <div class="form-group full"><label>Justificación técnica *</label><textarea id="f2_justificacion"></textarea></div>
+            <div class="form-group full"><label>Acciones requeridas</label><textarea id="f2_acciones"></textarea></div>
+            <div class="form-group"><label>Plazo de ajustes</label><input id="f2_plazo"></div>
+            <div class="form-group full"><label>Observaciones de auditoría</label><textarea id="f2_obs"></textarea></div>
+          </div>
+          <div class="actions-row">
+            <button class="btn btn-green" onclick="submitICO02()">💾 Guardar I.CO-02</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ PÁGINA: I.CO-03 ═══════════════════ -->
+<section id="ico03" class="page">
+  <div class="container">
+    <div class="section-title"><span class="tag">Formulario restringido</span><h2>I.CO-03 · Evaluación ex post</h2></div>
+    <div id="ico03LockMsg" class="note gold">Debe iniciar sesión como <strong>Comité de Validación</strong> para registrar la evaluación. Solo registros <strong>Validado</strong> pueden pasar a I.CO-03.</div>
+    <div class="card">
+      <div class="card-body">
+        <div class="toolbar">
+          <div class="form-group" style="min-width:220px"><label>ID_ICO validado</label><input id="f3_lookup" placeholder="ICO-2026-0001" onkeydown="if(event.key==='Enter')buscarRegistroParaEvaluacion()"></div>
+          <button class="btn btn-secondary btn-sm" onclick="buscarRegistroParaEvaluacion()">🔍 Buscar</button>
+          <button class="btn btn-outline btn-sm" onclick="openFichaByInput('f3_lookup')">📄 Ver ficha</button>
+        </div>
+        <div id="f3_info" class="note blue" style="display:none;margin-top:14px"></div>
+        <div id="ico03FormWrap" class="locked" style="margin-top:14px">
+          <div class="form-grid">
+            <div class="form-group"><label>Fecha de evaluación</label><input id="f3_fecha" type="date"></div>
+            <div class="form-group"><label>Período evaluado</label><input id="f3_periodo" placeholder="Ej. 2026-I"></div>
+            <div class="form-group"><label>Instancia evaluadora</label>
+              <select id="f3_instancia"><option value="">Seleccione</option><option>Comité de Validación</option><option>DISGI</option><option>Otra</option></select>
+            </div>
+            <div class="form-group"><label>Acta / soporte</label><input id="f3_acta"></div>
+            <div class="form-group"><label>¿Fue usado en una decisión? *</label>
+              <select id="f3_uso"><option value="">Seleccione</option><option>Sí</option><option>No</option></select>
+            </div>
+            <div class="form-group"><label>Tipo de decisión</label>
+              <select id="f3_tipo_decision"><option value="">Seleccione</option><option>Estratégica</option><option>Operativa</option><option>Contractual</option><option>Metodológica</option><option>Normativa</option></select>
+            </div>
+            <div class="form-group full"><label>Descripción de la decisión</label><textarea id="f3_descripcion_decision"></textarea></div>
+            <div class="form-group"><label>Nivel de incidencia</label>
+              <select id="f3_nivel"><option value="">Seleccione</option><option>Dirección</option><option>Subdirección</option><option>Proceso</option><option>Proyecto</option></select>
+            </div>
+            <div class="form-group"><label>Soporte decisional</label><input id="f3_soporte"></div>
+            <div class="form-group full"><label>Impacto en tiempo</label><textarea id="f3_tiempo"></textarea></div>
+            <div class="form-group full"><label>Impacto en costo</label><textarea id="f3_costo"></textarea></div>
+            <div class="form-group full"><label>Impacto en calidad / control</label><textarea id="f3_calidad"></textarea></div>
+            <div class="form-group"><label>Impacto institucional</label>
+              <select id="f3_impacto"><option value="">Seleccione</option><option>Bajo</option><option>Medio</option><option>Alto</option></select>
+            </div>
+            <div class="form-group"><label>Cobertura</label>
+              <select id="f3_cobertura"><option value="">Seleccione</option><option value="0.33">1 proyecto</option><option value="0.67">Multi-proyecto</option><option value="1">Institucional</option></select>
+            </div>
+            <div class="form-group full"><label>Hallazgos clave *</label><textarea id="f3_hallazgos"></textarea></div>
+            <div class="form-group full"><label>Ventajas *</label><textarea id="f3_ventajas"></textarea></div>
+            <div class="form-group full"><label>Desventajas / limitaciones</label><textarea id="f3_desventajas"></textarea></div>
+            <div class="form-group full"><label>Riesgos futuros</label><textarea id="f3_riesgos"></textarea></div>
+            <div class="form-group"><label>Nivel de riesgo</label>
+              <select id="f3_nivel_riesgo"><option value="">Seleccione</option><option>Bajo</option><option>Medio</option><option>Alto</option></select>
+            </div>
+            <div class="form-group"><label>Priorización institucional</label>
+              <select id="f3_prioridad"><option value="">Seleccione</option><option>Baja</option><option>Media</option><option>Alta</option></select>
+            </div>
+            <div class="form-group full"><label>Controles / mitigación</label><textarea id="f3_controles"></textarea></div>
+          </div>
+          <div class="actions-row">
+            <button class="btn btn-green" onclick="submitICO03()">💾 Guardar I.CO-03</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ PÁGINA: REPOSITORIO ═══════════════════ -->
+<section id="repositorio" class="page">
+  <div class="container">
+    <div class="section-title"><span class="tag">Consulta pública</span><h2>Repositorio · Búsqueda y fichas</h2></div>
+    <div class="card">
+      <div class="card-body">
+        <div class="toolbar">
+          <div class="form-group" style="min-width:220px"><label>Buscar</label>
+            <input id="repo_search" placeholder="ID, dirección, texto..." oninput="renderRepository()">
+          </div>
+          <div class="form-group"><label>Estado</label>
+            <select id="repo_estado" onchange="renderRepository()"><option value="">Todos</option><option>Radicado</option><option>Validado</option><option>Requiere ajustes</option><option>Rechazado</option></select>
+          </div>
+          <div class="form-group"><label>Tipo</label>
+            <select id="repo_tipo" onchange="renderRepository()"><option value="">Todos</option><option>BP</option><option>LA</option></select>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="updateAllSheets()">🔄 Sincronizar</button>
+          <button class="btn btn-outline btn-sm" onclick="exportCSV()">⬇ Exportar CSV</button>
+        </div>
+        <div class="table-wrap" style="margin-top:14px">
+          <table>
+            <thead><tr><th>ID_ICO</th><th>Tipo</th><th>Dirección / Área</th><th>Resumen</th><th>Estado</th><th>Índice</th><th>Acciones</th></tr></thead>
+            <tbody id="repoBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ PÁGINA: DASHBOARD ═══════════════════ -->
+<section id="dashboard" class="page">
+  <div class="container">
+    <div class="section-title"><span class="tag">Dashboard</span><h2>Indicadores ejecutivos del Modelo I.CO</h2></div>
+    <div class="grid-4">
+      <div class="kpi"><small>Total I.CO-01</small><strong id="k_total">—</strong><span>Registros cargados</span></div>
+      <div class="kpi vino"><small>Validados</small><strong id="k_validado">—</strong><span>Decisión favorable</span></div>
+      <div class="kpi verde"><small>Con I.CO-03</small><strong id="k_eval">—</strong><span>Evaluaciones ex post</span></div>
+      <div class="kpi oro"><small>Índice promedio</small><strong id="k_indice">—</strong><span>Promedio Índice I.CO</span></div>
+    </div>
+    <div class="grid-3" style="margin-top:14px">
+      <div class="card">
+        <div class="card-head"><div><h3>Distribución por estado</h3><p>Resumen operativo</p></div></div>
+        <div class="card-body"><div id="estadoResumen"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h3>Distribución por tipo</h3><p>BP vs LA</p></div></div>
+        <div class="card-body"><div id="tipoResumen"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h3>Dirección / Área</h3><p>Top registros I.CO-01</p></div></div>
+        <div class="card-body"><div id="direccionResumen"></div></div>
+      </div>
+    </div>
+    <div class="grid-2" style="margin-top:14px">
+      <div class="card">
+        <div class="card-head"><div><h3>Tasa de validación</h3><p>Del total de registros</p></div></div>
+        <div class="card-body"><div id="tasaValidacion"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h3>Registros recientes</h3><p>Últimos 5 radicados</p></div></div>
+        <div class="card-body"><div id="recientesResumen" style="font-size:12px"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ PÁGINA: CONFIGURACIÓN ═══════════════════ -->
+<section id="config" class="page">
+  <div class="container">
+    <div class="section-title"><span class="tag">Configuración</span><h2>Google Sheets, Apps Script y despliegue</h2></div>
+    <div class="note green">Las URLs ya están preconfiguradas con los valores de producción del FFIE. Solo edite si las URLs cambian.</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head"><div><h3>Parámetros del aplicativo</h3><p>Guardados en localStorage del navegador.</p></div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group full"><label>URL Apps Script Web App</label><input id="cfg_script" placeholder="https://script.google.com/macros/s/.../exec"></div>
+            <div class="form-group full"><label>URL CSV — I_CO_01</label><input id="cfg_i1"></div>
+            <div class="form-group full"><label>URL CSV — I_CO_02</label><input id="cfg_i2"></div>
+            <div class="form-group full"><label>URL CSV — I_CO_03</label><input id="cfg_i3"></div>
+            <div class="form-group full"><label>URL CSV — DASHBOARD_SOURCE</label><input id="cfg_dash"></div>
+            <div class="form-group full"><label>URL CSV — FICHAS_VALIDADAS</label><input id="cfg_fichas"></div>
+          </div>
+          <div class="actions-row">
+            <button class="btn btn-green" onclick="saveConfig()">💾 Guardar configuración</button>
+            <button class="btn btn-secondary" onclick="updateAllSheets()">🔄 Probar sincronización</button>
+            <button class="btn btn-outline" onclick="resetConfig()">Restablecer URLs por defecto</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h3>Apps Script — Code.gs</h3><p>Pegue en script.google.com como backend del portal.</p></div></div>
+        <div class="card-body">
+          <div class="code-block" id="scriptPreview">Cargando…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ MODAL: LOGIN ═══════════════════ -->
+<div id="loginModal" class="modal-backdrop" onclick="if(event.target===this)closeLoginPanel()">
+  <div class="modal login-box">
+    <div class="modal-head">
+      <strong>Inicio de sesión institucional</strong>
+      <button class="btn btn-outline btn-sm" onclick="closeLoginPanel()">Cerrar</button>
+    </div>
+    <div class="card-body">
+      <div class="note blue">Autenticación contra la hoja <strong>USUARIOS</strong> vía Apps Script. Solo usuarios activos con rol autorizado pueden registrar I.CO-02 e I.CO-03.</div>
+      <div class="form-grid">
+        <div class="form-group full"><label>Usuario</label><input id="login_user" placeholder="usuario institucional" onkeydown="if(event.key==='Enter')login()"></div>
+        <div class="form-group full"><label>Clave</label><input id="login_pass" type="password" placeholder="clave" onkeydown="if(event.key==='Enter')login()"></div>
+      </div>
+      <div class="actions-row">
+        <button class="btn btn-green" onclick="login()">→ Ingresar</button>
+        <button class="btn btn-outline" onclick="logout()">Cerrar sesión</button>
+      </div>
+      <div id="loginState" class="login-state">Sin autenticación activa.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ MODAL: FICHA ═══════════════════ -->
+<div id="fichaModal" class="modal-backdrop" onclick="if(event.target===this)closeFicha()">
+  <div class="modal">
+    <div class="modal-head">
+      <strong id="fichaTitle">Ficha I.CO</strong>
+      <div class="actions-row" style="margin:0;flex-wrap:wrap">
+        <button class="btn btn-secondary btn-sm" onclick="printFicha()">🖨 Imprimir</button>
+        <button class="btn btn-outline btn-sm" onclick="downloadFicha()">⬇ Descargar</button>
+        <button class="btn btn-outline btn-sm" onclick="closeFicha()">✕ Cerrar</button>
+      </div>
+    </div>
+    <div class="modal-body"><div id="printArea"></div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ TOAST CONTAINER ═══════════════════ -->
+<div id="toastContainer"></div>
+
+<!-- ═══════════════════ SCRIPT ═══════════════════ -->
+<script>
+/* ────── CONFIGURACIÓN FIJA DE PRODUCCIÓN ────── */
+const FIXED_CONFIG = {
+  scriptUrl: 'https://script.google.com/macros/s/AKfycbzjpmhL4ZkaeA6QAGl9mdvszbHPHv-_rV-hpp1CYQ3_fo4OcCGyWmt8rRXupLpDje4/exec',
+  csv01:     'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrBUo56ZrhwKLm47uYqAgESln2Za8Iajw_Xluw7kfkmN-rAxazj1ME4M7kT70sAwAbEd6BjtHwG-J5/pub?gid=2087831054&single=true&output=csv',
+  csv02:     'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrBUo56ZrhwKLm47uYqAgESln2Za8Iajw_Xluw7kfkmN-rAxazj1ME4M7kT70sAwAbEd6BjtHwG-J5/pub?gid=1528677368&single=true&output=csv',
+  csv03:     'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrBUo56ZrhwKLm47uYqAgESln2Za8Iajw_Xluw7kfkmN-rAxazj1ME4M7kT70sAwAbEd6BjtHwG-J5/pub?gid=1845804722&single=true&output=csv',
+  csvDash:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrBUo56ZrhwKLm47uYqAgESln2Za8Iajw_Xluw7kfkmN-rAxazj1ME4M7kT70sAwAbEd6BjtHwG-J5/pub?gid=1343284501&single=true&output=csv',
+  csvFichas: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQrBUo56ZrhwKLm47uYqAgESln2Za8Iajw_Xluw7kfkmN-rAxazj1ME4M7kT70sAwAbEd6BjtHwG-J5/pub?gid=222220901&single=true&output=csv'
+};
+
+/* ────── ESTADO GLOBAL ────── */
+const APP = {
+  config: {...FIXED_CONFIG},
+  session: null,
+  data01: [], data02: [], data03: [],
+  dashboardSource: [], fichasValidadas: []
+};
+
+/* ────── NAVEGACIÓN ────── */
+function toggleNav(forceClose = false){
+  const nav = document.getElementById('mainNav');
+  if(!nav) return;
+  forceClose ? nav.classList.remove('open') : nav.classList.toggle('open');
+}
+function showPage(id, btn){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  if(!btn) btn = document.querySelector(`.nav button[data-target="${id}"]`);
+  if(btn) btn.classList.add('active');
+  if(id === 'dashboard') renderDashboard();
+  if(id === 'repositorio') renderRepository();
+  toggleNav(true);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ────── TOAST ────── */
+function toast(msg, type='ok', ms=3500){
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), ms);
+}
+
+/* ────── PANELS ────── */
+function toggleLoginPanel(){ document.getElementById('loginModal').classList.add('open'); }
+function closeLoginPanel(){ document.getElementById('loginModal').classList.remove('open'); }
+function closeFicha(){ document.getElementById('fichaModal').classList.remove('open'); }
+
+/* ────── FECHA ────── */
+function setToday(){
+  const d = new Date().toISOString().slice(0,10);
+  ['f1_fecha','f2_fecha','f3_fecha'].forEach(id => { const el = document.getElementById(id); if(el) el.value = d; });
+}
+
+/* ────── CONFIGURACIÓN ────── */
+function saveConfig(){
+  APP.config.scriptUrl = document.getElementById('cfg_script').value.trim() || FIXED_CONFIG.scriptUrl;
+  APP.config.csv01     = document.getElementById('cfg_i1').value.trim()     || FIXED_CONFIG.csv01;
+  APP.config.csv02     = document.getElementById('cfg_i2').value.trim()     || FIXED_CONFIG.csv02;
+  APP.config.csv03     = document.getElementById('cfg_i3').value.trim()     || FIXED_CONFIG.csv03;
+  APP.config.csvDash   = document.getElementById('cfg_dash').value.trim()   || FIXED_CONFIG.csvDash;
+  APP.config.csvFichas = document.getElementById('cfg_fichas').value.trim() || FIXED_CONFIG.csvFichas;
+  localStorage.setItem('ico_config_prod', JSON.stringify(APP.config));
+  toast('Configuración guardada');
+}
+function resetConfig(){
+  APP.config = {...FIXED_CONFIG};
+  localStorage.setItem('ico_config_prod', JSON.stringify(APP.config));
+  fillConfigUI();
+  toast('URLs restablecidas a valores de producción');
+}
+function loadConfig(){
+  const saved = JSON.parse(localStorage.getItem('ico_config_prod') || '{}');
+  // Merge: saved overrides fixed, but if saved is empty use fixed
+  APP.config = { ...FIXED_CONFIG, ...saved };
+  // Restore blank keys to fixed
+  Object.keys(FIXED_CONFIG).forEach(k => { if(!APP.config[k]) APP.config[k] = FIXED_CONFIG[k]; });
+  fillConfigUI();
+}
+function fillConfigUI(){
+  document.getElementById('cfg_script').value = APP.config.scriptUrl || '';
+  document.getElementById('cfg_i1').value     = APP.config.csv01     || '';
+  document.getElementById('cfg_i2').value     = APP.config.csv02     || '';
+  document.getElementById('cfg_i3').value     = APP.config.csv03     || '';
+  document.getElementById('cfg_dash').value   = APP.config.csvDash   || '';
+  document.getElementById('cfg_fichas').value = APP.config.csvFichas || '';
+}
+
+/* ────── ESTADO API ────── */
+function setApiStatus(ok){
+  document.getElementById('apiStatus').className = 'status-dot ' + (ok ? 'ok' : 'off');
+}
+
+/* ────── SESIÓN ────── */
+function loadSession(){
+  APP.session = JSON.parse(localStorage.getItem('ico_session') || 'null');
+  updateSessionUI();
+}
+function updateSessionUI(){
+  const badge  = document.getElementById('loginBadge');
+  const state  = document.getElementById('loginState');
+  const topBtn = document.getElementById('loginBtnTop');
+  const role   = APP.session?.rol || 'Público';
+  badge.textContent = role;
+  badge.className   = 'badge ' + (APP.session ? (APP.session.rol === 'Comité de Validación' ? 'admin' : 'validado') : 'radicado');
+  if(state) state.textContent = APP.session
+    ? `✔ Autenticado como ${APP.session.nombre} · ${APP.session.rol}`
+    : 'Sin autenticación activa.';
+  if(topBtn) topBtn.textContent = APP.session ? '← Cambiar sesión' : 'Iniciar sesión';
+  const canICO02 = !!APP.session && ['Profesional Validador','Comité de Validación'].includes(APP.session.rol);
+  const canICO03 = !!APP.session && APP.session.rol === 'Comité de Validación';
+  document.getElementById('ico02FormWrap').classList.toggle('locked', !canICO02);
+  document.getElementById('ico03FormWrap').classList.toggle('locked', !canICO03);
+  const lock02 = document.getElementById('ico02LockMsg');
+  const lock03 = document.getElementById('ico03LockMsg');
+  if(lock02) lock02.style.display = canICO02 ? 'none' : '';
+  if(lock03) lock03.style.display = canICO03 ? 'none' : '';
+  // Auto-fill validador from session
+  if(canICO02 && APP.session){
+    const vEl = document.getElementById('f2_validador');
+    const rEl = document.getElementById('f2_rol');
+    const cEl = document.getElementById('f2_correo');
+    if(vEl && !vEl.value) vEl.value = APP.session.nombre || '';
+    if(rEl && !rEl.value) rEl.value = APP.session.rol    || '';
+    if(cEl && !cEl.value && APP.session.correo) cEl.value = APP.session.correo;
+  }
+}
+
+/* ────── LOGIN / LOGOUT ────── */
+async function login(){
+  if(!APP.config.scriptUrl){ toast('Configure la URL del Apps Script primero.','err'); return; }
+  const usuario = document.getElementById('login_user').value.trim();
+  const clave   = document.getElementById('login_pass').value;
+  if(!usuario || !clave){ toast('Ingrese usuario y clave.','err'); return; }
+  const res = await postData({action:'login', usuario, clave});
+  if(res?.status === 'ok'){
+    APP.session = {usuario: res.usuario, nombre: res.nombre, rol: res.rol};
+    localStorage.setItem('ico_session', JSON.stringify(APP.session));
+    updateSessionUI();
+    closeLoginPanel();
+    toast(`Bienvenido, ${res.nombre} · ${res.rol}`);
+  } else {
+    toast(res?.message || 'No fue posible autenticar', 'err');
+  }
+}
+function logout(){
+  localStorage.removeItem('ico_session');
+  APP.session = null;
+  updateSessionUI();
+  toast('Sesión cerrada');
+}
+
+/* ────── API: postData ────── */
+async function postData(payload){
+  try{
+    const r = await fetch(APP.config.scriptUrl, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(payload)
+    });
+    const j = await r.json();
+    setApiStatus(true);
+    return j;
+  }catch(err){
+    setApiStatus(false);
+    console.error('[postData]', err);
+    return {status:'error', message: String(err)};
+  }
+}
+
+/* ────── API: getDataCSV ────── */
+async function getDataCSV(url){
+  if(!url) return [];
+  try{
+    const text = await fetch(url + '&_=' + Date.now()).then(r => r.text());
+    setApiStatus(true);
+    return csvToObjects(text);
+  }catch(err){
+    setApiStatus(false);
+    console.error('[getDataCSV]', err);
+    return [];
+  }
+}
+
+/* ────── SINCRONIZACIÓN ────── */
+async function updateAllSheets(){
+  const [d01, d02, d03, dash, fichas] = await Promise.all([
+    getDataCSV(APP.config.csv01),
+    getDataCSV(APP.config.csv02),
+    getDataCSV(APP.config.csv03),
+    getDataCSV(APP.config.csvDash),
+    getDataCSV(APP.config.csvFichas)
+  ]);
+  APP.data01 = d01; APP.data02 = d02; APP.data03 = d03;
+  APP.dashboardSource = dash; APP.fichasValidadas = fichas;
+  renderRepository();
+  renderDashboard();
+  toast(`Sincronizado · ${d01.length} registros I.CO-01`);
+}
+
+/* ────── CSV PARSER ────── */
+function csvToObjects(text){
+  const rows = [];
+  let row = [], cur = '', q = false;
+  for(let i = 0; i < text.length; i++){
+    const c = text[i];
+    if(c === '"'){
+      if(q && text[i+1] === '"'){ cur += '"'; i++; }
+      else q = !q;
+    }else if(c === ',' && !q){
+      row.push(cur); cur = '';
+    }else if((c === '\n' || c === '\r') && !q){
+      if(c === '\r' && text[i+1] === '\n') i++;
+      row.push(cur);
+      if(row.some(x => x !== '')) rows.push(row);
+      row = []; cur = '';
+    }else cur += c;
+  }
+  if(cur || row.length){ row.push(cur); rows.push(row); }
+  if(!rows.length) return [];
+  const headers = rows.shift().map(h => h.trim());
+  return rows.filter(r => r.some(v => String(v).trim() !== '')).map(r => {
+    const o = {}; headers.forEach((h,i) => o[h] = r[i] ?? ''); return o;
+  });
+}
+
+/* ────── GENERADOR ID ────── */
+function nextId(){
+  const y = new Date().getFullYear();
+  const nums = APP.data01
+    .filter(x => String(x.ID_ICO || '').startsWith(`ICO-${y}-`))
+    .map(x => Number(String(x.ID_ICO).split('-').pop()) || 0);
+  const n = (Math.max(0, ...nums) + 1).toString().padStart(4, '0');
+  return `ICO-${y}-${n}`;
+}
+
+/* ────── MERGE DATA ────── */
+function mergeData(){
+  return APP.data01.map(x => {
+    const v = APP.data02.find(y => String(y.ID_ICO) === String(x.ID_ICO)) || {};
+    const e = APP.data03.find(y => String(y.ID_ICO) === String(x.ID_ICO)) || {};
+    return {
+      ID_ICO: x.ID_ICO,
+      Tipo: x.Tipo,
+      Direccion: x.Direccion,
+      Area_Equipo: x.Area_Equipo,
+      Resumen: x.B3_Accion || x.B1_Contexto || '',
+      Estado: v.Decision || x.Estado || 'Radicado',
+      Indice_ICO_Calculado: e.Indice_ICO_Calculado || '',
+      Fecha_Registro: x.Fecha_Registro || ''
+    };
+  }).sort((a,b) => (b.ID_ICO||'').localeCompare(a.ID_ICO||''));
+}
+
+/* ────── REPOSITORIO ────── */
+function renderRepository(){
+  const body  = document.getElementById('repoBody');
+  if(!body) return;
+  const txt    = (document.getElementById('repo_search')?.value || '').toLowerCase();
+  const estado = document.getElementById('repo_estado')?.value || '';
+  const tipo   = document.getElementById('repo_tipo')?.value || '';
+  const data   = mergeData().filter(r => {
+    if(estado && r.Estado !== estado) return false;
+    if(tipo   && r.Tipo   !== tipo)   return false;
+    const hay = `${r.ID_ICO} ${r.Direccion} ${r.Area_Equipo} ${r.Resumen}`.toLowerCase();
+    return !txt || hay.includes(txt);
+  });
+  body.innerHTML = data.map(r => `
+    <tr>
+      <td class="mono">${esc(r.ID_ICO)}</td>
+      <td><span class="badge ${r.Tipo==='BP'?'bp':'la'}">${esc(r.Tipo)}</span></td>
+      <td><strong>${esc(r.Direccion)}</strong><br><span style="color:var(--muted)">${esc(r.Area_Equipo)}</span></td>
+      <td>${esc((r.Resumen||'').slice(0,120))}</td>
+      <td><span class="badge ${estadoBadge(r.Estado)}">${esc(r.Estado||'Radicado')}</span></td>
+      <td>${esc(r.Indice_ICO_Calculado)}</td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-secondary btn-sm" onclick="renderFicha('${r.ID_ICO}')">📄 Ver ficha</button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="7" style="color:var(--muted);text-align:center">Sin resultados</td></tr>';
+}
+
+/* ────── EXPORTAR CSV ────── */
+function exportCSV(){
+  const data = mergeData();
+  if(!data.length){ toast('Sin datos para exportar','err'); return; }
+  const cols = ['ID_ICO','Tipo','Direccion','Area_Equipo','Estado','Indice_ICO_Calculado','Fecha_Registro'];
+  const csv  = [cols.join(','), ...data.map(r => cols.map(c => `"${String(r[c]||'').replace(/"/g,'""')}"`).join(','))].join('\r\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
+  a.download = `ICO_export_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+/* ────── DASHBOARD ────── */
+function renderDashboard(){
+  const merged   = mergeData();
+  const validados = merged.filter(x => x.Estado === 'Validado');
+  const indices  = APP.data03.map(x => Number(x.Indice_ICO_Calculado)||0).filter(x => x > 0);
+  document.getElementById('k_total').textContent    = merged.length || 0;
+  document.getElementById('k_validado').textContent = validados.length;
+  document.getElementById('k_eval').textContent     = APP.data03.length;
+  document.getElementById('k_indice').textContent   = indices.length
+    ? Math.round(indices.reduce((a,b) => a+b, 0) / indices.length)
+    : 0;
+
+  // Estados
+  const estados = {};
+  merged.forEach(x => { const k = x.Estado||'Radicado'; estados[k] = (estados[k]||0)+1; });
+  renderBarChart('estadoResumen', estados, merged.length);
+
+  // Tipos
+  const tipos = {};
+  merged.forEach(x => { const k = x.Tipo||'—'; tipos[k] = (tipos[k]||0)+1; });
+  renderBarChart('tipoResumen', tipos, merged.length);
+
+  // Direcciones
+  const dirs = {};
+  APP.data01.forEach(x => { const k = x.Direccion||'Sin dirección'; dirs[k] = (dirs[k]||0)+1; });
+  const topDirs = Object.fromEntries(Object.entries(dirs).sort((a,b)=>b[1]-a[1]).slice(0,8));
+  renderBarChart('direccionResumen', topDirs, APP.data01.length);
+
+  // Tasa validación
+  const tasaEl = document.getElementById('tasaValidacion');
+  if(tasaEl){
+    const pct = merged.length ? Math.round(validados.length / merged.length * 100) : 0;
+    tasaEl.innerHTML = `
+      <div style="font-size:48px;font-weight:800;color:var(--verde);line-height:1">${pct}%</div>
+      <div style="color:var(--muted);font-size:13px;margin-top:6px">${validados.length} de ${merged.length} registros validados</div>
+      <div class="bar-track" style="margin-top:12px;height:14px">
+        <div class="bar-fill" style="width:${pct}%;background:var(--verde)"></div>
+      </div>`;
+  }
+
+  // Recientes
+  const recEl = document.getElementById('recientesResumen');
+  if(recEl){
+    const last5 = [...APP.data01].slice(0,5);
+    if(!last5.length){ recEl.innerHTML = '<span style="color:var(--muted)">Sin datos</span>'; return; }
+    recEl.innerHTML = last5.map(r => `
+      <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);gap:8px">
+        <span class="mono" style="font-size:11px">${esc(r.ID_ICO)}</span>
+        <span><span class="badge ${r.Tipo==='BP'?'bp':'la'}" style="font-size:10px">${esc(r.Tipo)}</span></span>
+        <span style="color:var(--muted);font-size:11px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.Direccion)}</span>
+      </div>`).join('');
+  }
+}
+
+function renderBarChart(elId, counts, total){
+  const el = document.getElementById(elId);
+  if(!el) return;
+  const max = Math.max(1, ...Object.values(counts));
+  el.innerHTML = Object.entries(counts).map(([k,v]) => `
+    <div class="bar-row">
+      <span class="bar-label" title="${esc(k)}">${esc(k)}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(v/max*100)}%"></div></div>
+      <span class="bar-count">${v}</span>
+    </div>`).join('') || '<span style="color:var(--muted);font-size:12px">Sin datos</span>';
+}
+
+/* ────── FICHA ────── */
+function renderFicha(id){
+  const r = APP.data01.find(x => String(x.ID_ICO) === String(id));
+  if(!r){ toast('No se encontró la ficha: ' + id, 'err'); return; }
+  const v = APP.data02.find(x => String(x.ID_ICO) === String(id)) || {};
+  const e = APP.data03.find(x => String(x.ID_ICO) === String(id)) || {};
+  document.getElementById('fichaTitle').textContent = `Ficha I.CO · ${id}`;
+  document.getElementById('printArea').innerHTML    = buildFichaHTML(r, v, e);
+  document.getElementById('fichaModal').classList.add('open');
+}
+function openFichaByInput(inputId){
+  const id = document.getElementById(inputId)?.value?.trim();
+  if(!id){ toast('Ingrese un ID_ICO', 'err'); return; }
+  renderFicha(id);
+}
+function buildFichaHTML(r, v, e){
+  const estado = v.Decision || r.Estado || 'Radicado';
+  return `<div class="ficha">
+    <div class="ficha-header">
+      <div class="ficha-brand">
+        <strong>Fondo de Financiamiento de la Infraestructura Educativa — FFIE</strong>
+        <span>DISGI · Ficha institucional del Modelo I.CO · ${new Date().toLocaleDateString('es-CO')}</span>
+      </div>
+      <div style="text-align:right">
+        <div class="ficha-id">${esc(r.ID_ICO||'')}</div>
+        <div style="margin-top:8px;display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap">
+          <span class="badge ${r.Tipo==='BP'?'bp':'la'}">${esc(r.Tipo||'')}</span>
+          <span class="badge ${estadoBadge(estado)}">${esc(estado)}</span>
+        </div>
+      </div>
+    </div>
+    <div class="ficha-body">
+      <div class="ficha-section">
+        <h4>I.CO-01 · Identificación y registro</h4>
+        <div class="ficha-grid">
+          ${fi('Fecha de registro',r.Fecha_Registro)}
+          ${fi('Dirección / Dependencia',r.Direccion)}
+          ${fi('Área / Equipo',r.Area_Equipo)}
+          ${fi('Proceso asociado',r.Proceso_Asociado)}
+          ${fi('Fase del ciclo',r.Fase_Ciclo)}
+          ${fi('Replicabilidad',r.Replicabilidad)}
+          ${fi('Contexto / situación inicial',r.B1_Contexto,true)}
+          ${fi('Objetivo perseguido',r.B2_Objetivo,true)}
+          ${fi('Acción implementada',r.B3_Accion,true)}
+          ${fi('Actores involucrados',r.B4_Actores,true)}
+          ${fi('Resultado observado',r.B5_Resultado,true)}
+          ${fi('Evidencias / radicados',r.C_Evidencias,true)}
+          ${fi('Impacto en tiempo (días)',r.C_Impacto_Tiempo_Dias)}
+          ${fi('Impacto en costo (COP)',r.C_Impacto_Costo_COP)}
+          ${fi('Impacto en calidad / control',r.C_Impacto_Calidad,true)}
+          ${fi('Riesgos / consideraciones',r.C_Riesgos,true)}
+          ${fi('Recomendación',r.D_Recomendacion,true)}
+        </div>
+      </div>
+      <div class="ficha-section">
+        <h4>I.CO-02 · Validación</h4>
+        <div class="ficha-grid">
+          ${fi('Fecha de validación',v.Fecha_Validacion)}
+          ${fi('Dependencia que valida',v.Dependencia_Valida)}
+          ${fi('Validador',v.Nombre_Validador)}
+          ${fi('Rol del validador',v.Rol_Validador)}
+          ${fi('Suficiencia de evidencia',v.Suficiencia_Evidencia)}
+          ${fi('Clasificación de riesgo',v.Clasificacion_Riesgo)}
+          ${fi('Decisión',v.Decision)}
+          ${fi('Tipos de evidencia',v.Tipos_Evidencia_Revisada,true)}
+          ${fi('Referencia / radicado',v.Referencia_Radicado,true)}
+          ${fi('Justificación técnica',v.Justificacion_Tecnica,true)}
+          ${fi('Acciones requeridas',v.Acciones_Requeridas,true)}
+          ${fi('Observaciones de auditoría',v.Obs_Auditoria,true)}
+        </div>
+      </div>
+      <div class="ficha-section">
+        <h4>I.CO-03 · Evaluación ex post</h4>
+        <div class="ficha-grid">
+          ${fi('Fecha de evaluación',e.Fecha_Evaluacion)}
+          ${fi('Período evaluado',e.Periodo_Evaluado)}
+          ${fi('Instancia evaluadora',e.Instancia_Evaluadora)}
+          ${fi('¿Usado en decisión?',e.Fue_Usado_Decision)}
+          ${fi('Tipo de decisión',e.Tipo_Decision)}
+          ${fi('Nivel de incidencia',e.Nivel_Incidencia)}
+          ${fi('Impacto institucional',e.Impacto_Institucional)}
+          ${fi('Cobertura',e.Dim_Cobertura_C)}
+          ${fi('Índice I.CO calculado',e.Indice_ICO_Calculado)}
+          ${fi('Descripción de la decisión',e.Descripcion_Decision,true)}
+          ${fi('Hallazgos clave',e.D1_Hallazgos,true)}
+          ${fi('Ventajas',e.D2_Ventajas,true)}
+          ${fi('Desventajas / limitaciones',e.D3_Desventajas,true)}
+          ${fi('Riesgos futuros',e.Riesgos_Futuros,true)}
+          ${fi('Controles / mitigación',e.Controles_Mitigacion,true)}
+        </div>
+      </div>
+    </div>
+    <div class="ficha-footer">
+      <span>Portal I.CO · FFIE · DISGI · Generado desde GitHub Pages</span>
+      <span>${new Date().toLocaleString('es-CO')}</span>
+    </div>
+  </div>`;
+}
+function fi(label, value, full = false){
+  if(!value && value !== 0) return '';
+  return `<div class="ficha-item${full?' full':''}"><small>${esc(label)}</small><div>${esc(value)}</div></div>`;
+}
+
+/* ────── IMPRIMIR FICHA ────── */
+function printFicha(){
+  const content = document.getElementById('printArea').innerHTML.trim();
+  if(!content) return;
+  const w = window.open('','_blank','width=1100,height=800');
+  if(!w){ alert('El navegador bloqueó la ventana emergente.'); return; }
+  w.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+  <title>Ficha I.CO</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+  *{box-sizing:border-box}body{font-family:'Plus Jakarta Sans',Arial,sans-serif;background:#fff;color:#213447;margin:0;padding:0}
+  .ficha{max-width:1100px;margin:0 auto}.ficha-header{display:flex;justify-content:space-between;gap:16px;padding:22px;background:linear-gradient(135deg,#17324d,#8B1A32);color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ficha-brand strong{display:block;font-size:15px}.ficha-brand span{display:block;color:rgba(255,255,255,.72);font-size:11px;margin-top:4px}
+  .ficha-id{font-family:Consolas,monospace;font-size:19px;font-weight:800;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);padding:8px 14px;border-radius:12px}
+  .ficha-body{padding:18px 22px}.ficha-section{margin-bottom:16px;page-break-inside:avoid}
+  .ficha-section h4{margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#64778a}
+  .ficha-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .ficha-item{background:#f9fbfd;border:1px solid #dce5ef;border-radius:12px;padding:10px 12px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ficha-item small{display:block;color:#64778a;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+  .ficha-item div{font-size:12px;line-height:1.55}.ficha-item.full{grid-column:1/-1}
+  .ficha-footer{padding:10px 22px;background:#f7f9fc;border-top:1px solid #dce5ef;font-size:11px;color:#64778a;display:flex;justify-content:space-between;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .badge{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800}
+  .badge.bp{background:#e8f2ff;color:#1565c0}.badge.la{background:#fdf1f4;color:#8B1A32}
+  .badge.validado{background:#ebf8f2;color:#13795b}.badge.radicado{background:#eef3f8;color:#4c6276}
+  .badge.ajustes{background:#fff6df;color:#a16a00}.badge.rechazado{background:#fce9ea;color:#be2f39}
+  @media print{.ficha-grid{grid-template-columns:repeat(2,1fr)}}
+  </style></head><body>${content}</body></html>`);
+  w.document.close();
+  w.focus();
+  setTimeout(() => { w.print(); }, 400);
+}
+
+/* ────── DESCARGAR FICHA HTML ────── */
+function downloadFicha(){
+  const content = document.getElementById('printArea').innerHTML.trim();
+  const id = APP.data01.find(x => x) ? (document.getElementById('fichaTitle')?.textContent?.split('·').pop()?.trim() || 'ficha') : 'ficha';
+  if(!content){ toast('Sin contenido','err'); return; }
+  const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Ficha I.CO ${esc(id)}</title>
+  <style>
+  *{box-sizing:border-box}body{font-family:Arial,sans-serif;background:#fff;color:#213447;margin:0;padding:20px}
+  .ficha{max-width:1000px;margin:0 auto}.ficha-header{display:flex;justify-content:space-between;gap:16px;padding:22px;background:#17324d;color:#fff}
+  .ficha-brand strong{display:block;font-size:15px}.ficha-brand span{display:block;font-size:11px;opacity:.7;margin-top:4px}
+  .ficha-id{font-family:Consolas,monospace;font-size:19px;font-weight:800;border:1px solid rgba(255,255,255,.3);padding:8px 14px}
+  .ficha-body{padding:18px 22px}.ficha-section{margin-bottom:16px}.ficha-section h4{font-size:12px;text-transform:uppercase;color:#64778a;margin:0 0 8px}
+  .ficha-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.ficha-item{background:#f9fbfd;border:1px solid #dce5ef;padding:10px 12px}
+  .ficha-item small{display:block;color:#64778a;font-size:10px;font-weight:bold;text-transform:uppercase;margin-bottom:4px}
+  .ficha-item div{font-size:12px}.ficha-item.full{grid-column:1/-1}
+  .ficha-footer{padding:10px 22px;background:#f7f9fc;border-top:1px solid #dce5ef;font-size:11px;color:#64778a;display:flex;justify-content:space-between}
+  </style></head><body>${content}</body></html>`;
+  const a = document.createElement('a');
+  a.href = 'data:text/html;charset=utf-8,' + encodeURIComponent(html);
+  a.download = `Ficha_ICO_${id.replace(/[^a-z0-9-]/gi,'_')}_${new Date().toISOString().slice(0,10)}.html`;
+  a.click();
+}
+
+/* ────── SUBMIT I.CO-01 ────── */
+async function submitICO01(){
+  const record = {
+    ID_ICO:               nextId(),
+    Fecha_Registro:       valueOf('f1_fecha'),
+    Tipo:                 valueOf('f1_tipo'),
+    Direccion:            valueOf('f1_direccion'),
+    Area_Equipo:          valueOf('f1_area'),
+    Proceso_Asociado:     valueOf('f1_proceso'),
+    Fase_Ciclo:           valueOf('f1_fase'),
+    B1_Contexto:          valueOf('f1_contexto'),
+    B2_Objetivo:          valueOf('f1_objetivo'),
+    B3_Accion:            valueOf('f1_accion'),
+    B4_Actores:           valueOf('f1_actores'),
+    B5_Resultado:         valueOf('f1_resultado'),
+    C_Evidencias:         valueOf('f1_evidencias'),
+    C_Impacto_Tiempo_Dias:valueOf('f1_tiempo'),
+    C_Impacto_Costo_COP:  valueOf('f1_costo'),
+    C_Impacto_Calidad:    valueOf('f1_calidad'),
+    Replicabilidad:       valueOf('f1_replicabilidad'),
+    C_Riesgos:            valueOf('f1_riesgos'),
+    D_Recomendacion:      valueOf('f1_recomendacion'),
+    Estado:               'Radicado',
+    E_Nombre:             valueOf('f1_nombre'),
+    E_Cargo:              valueOf('f1_cargo'),
+    E_Correo:             valueOf('f1_correo'),
+    E_Autoriza_Contacto:  valueOf('f1_contacto'),
+    Fecha_Guardado:       new Date().toISOString()
+  };
+  if(!record.Fecha_Registro || !record.Tipo || !record.Direccion || !record.Area_Equipo || !record.B1_Contexto || !record.B3_Accion || !record.D_Recomendacion){
+    toast('Complete los campos obligatorios (*).','err'); return;
+  }
+  const res = await postData({action:'append', sheet:'I_CO_01', record});
+  if(res?.status === 'ok'){
+    APP.data01.unshift(record);
+    renderRepository(); renderDashboard();
+    toast(`✔ Registro guardado · ${record.ID_ICO}`);
+    clearFormICO01(); setToday();
+    await syncDashboardAndFichas(record.ID_ICO);
+  } else {
+    toast(res?.message || 'Error guardando I.CO-01', 'err');
+  }
+}
+
+/* ────── SUBMIT I.CO-02 ────── */
+async function submitICO02(){
+  if(!APP.session || !['Profesional Validador','Comité de Validación'].includes(APP.session.rol)){
+    toast('No autorizado.','err'); return;
+  }
+  const id = valueOf('f2_lookup');
+  if(!id){ toast('Ingrese el ID_ICO.','err'); return; }
+  const record = {
+    ID_ICO:               id,
+    Fecha_Validacion:     valueOf('f2_fecha'),
+    Dependencia_Valida:   valueOf('f2_dependencia'),
+    Nombre_Validador:     valueOf('f2_validador'),
+    Rol_Validador:        valueOf('f2_rol'),
+    Correo_Validador:     valueOf('f2_correo'),
+    Tipos_Evidencia_Revisada: valueOf('f2_tipos'),
+    Referencia_Radicado:  valueOf('f2_referencia'),
+    Suficiencia_Evidencia: valueOf('f2_suficiencia'),
+    Brechas:              valueOf('f2_brechas'),
+    Decision:             valueOf('f2_decision'),
+    Justificacion_Tecnica: valueOf('f2_justificacion'),
+    Acciones_Requeridas:  valueOf('f2_acciones'),
+    Plazo_Ajustes:        valueOf('f2_plazo'),
+    Clasificacion_Riesgo: valueOf('f2_riesgo'),
+    Obs_Auditoria:        valueOf('f2_obs'),
+    Fecha_Guardado:       new Date().toISOString()
+  };
+  if(!record.Fecha_Validacion || !record.Decision || !record.Justificacion_Tecnica){
+    toast('Complete fecha, decisión y justificación técnica.','err'); return;
+  }
+  const res = await postData({action:'upsert', sheet:'I_CO_02', keyField:'ID_ICO', record});
+  if(res?.status === 'ok'){
+    const idx = APP.data02.findIndex(x => String(x.ID_ICO) === String(id));
+    if(idx >= 0) APP.data02[idx] = record; else APP.data02.unshift(record);
+    await syncDashboardAndFichas(id);
+    renderRepository(); renderDashboard();
+    toast(`✔ I.CO-02 guardado · ${id}`);
+  } else {
+    toast(res?.message || 'Error guardando I.CO-02','err');
+  }
+}
+
+/* ────── SUBMIT I.CO-03 ────── */
+async function submitICO03(){
+  if(!APP.session || APP.session.rol !== 'Comité de Validación'){
+    toast('Solo Comité de Validación puede registrar I.CO-03.','err'); return;
+  }
+  const id = valueOf('f3_lookup');
+  if(!id){ toast('Ingrese el ID_ICO.','err'); return; }
+  const impactoMap = {Bajo:0.33, Medio:0.67, Alto:1};
+  const uso       = valueOf('f3_uso') === 'Sí' ? 1 : 0;
+  const cobertura = Number(valueOf('f3_cobertura') || 0);
+  const impacto   = impactoMap[valueOf('f3_impacto')] || 0;
+  const indice    = cobertura ? Math.round((0.25*cobertura + 0.25*1 + 0.25*uso + 0.25*impacto) * 100) : '';
+  const d1ref     = APP.data01.find(x => String(x.ID_ICO) === String(id)) || {};
+  const record = {
+    ID_ICO:               id,
+    Fecha_Evaluacion:     valueOf('f3_fecha'),
+    Direccion:            d1ref.Direccion   || '',
+    Area_Equipo:          d1ref.Area_Equipo || '',
+    Tipo:                 d1ref.Tipo        || '',
+    Periodo_Evaluado:     valueOf('f3_periodo'),
+    Instancia_Evaluadora: valueOf('f3_instancia'),
+    Acta_Soporte:         valueOf('f3_acta'),
+    Fue_Usado_Decision:   valueOf('f3_uso'),
+    Tipo_Decision:        valueOf('f3_tipo_decision'),
+    Descripcion_Decision: valueOf('f3_descripcion_decision'),
+    Nivel_Incidencia:     valueOf('f3_nivel'),
+    Soporte_Decisional:   valueOf('f3_soporte'),
+    Impacto_Tiempo_Real:  valueOf('f3_tiempo'),
+    Impacto_Costo_Real:   valueOf('f3_costo'),
+    Impacto_Calidad_Real: valueOf('f3_calidad'),
+    Impacto_Institucional: valueOf('f3_impacto'),
+    D1_Hallazgos:         valueOf('f3_hallazgos'),
+    D2_Ventajas:          valueOf('f3_ventajas'),
+    D3_Desventajas:       valueOf('f3_desventajas'),
+    Riesgos_Futuros:      valueOf('f3_riesgos'),
+    Nivel_Riesgo:         valueOf('f3_nivel_riesgo'),
+    Priorizacion_Institucional: valueOf('f3_prioridad'),
+    Controles_Mitigacion: valueOf('f3_controles'),
+    Dim_Cobertura_C:      cobertura,
+    Dim_Uso_U:            uso,
+    Dim_Impacto_I:        impacto,
+    Indice_ICO_Calculado: indice,
+    Fecha_Guardado:       new Date().toISOString()
+  };
+  if(!record.Fecha_Evaluacion || !record.Periodo_Evaluado || !record.Fue_Usado_Decision || !record.D1_Hallazgos || !record.D2_Ventajas){
+    toast('Complete los campos obligatorios del I.CO-03.','err'); return;
+  }
+  const res = await postData({action:'upsert', sheet:'I_CO_03', keyField:'ID_ICO', record});
+  if(res?.status === 'ok'){
+    const idx = APP.data03.findIndex(x => String(x.ID_ICO) === String(id));
+    if(idx >= 0) APP.data03[idx] = record; else APP.data03.unshift(record);
+    await syncDashboardAndFichas(id);
+    renderRepository(); renderDashboard();
+    toast(`✔ I.CO-03 guardado · ${id} · Índice: ${indice}`);
+  } else {
+    toast(res?.message || 'Error guardando I.CO-03','err');
+  }
+}
+
+/* ────── SYNC ────── */
+async function syncDashboardAndFichas(id){
+  if(!APP.config.scriptUrl) return;
+  await postData({action:'sync_dashboard', id_ico: id});
+}
+
+/* ────── BUSCAR PARA VALIDACIÓN ────── */
+function buscarRegistroParaValidacion(){
+  const id = valueOf('f2_lookup');
+  const r  = APP.data01.find(x => String(x.ID_ICO) === String(id));
+  const box = document.getElementById('f2_info');
+  if(!r){ box.style.display='block'; box.textContent='No se encontró el ID_ICO.'; return; }
+  // Pre-cargar valores de I.CO-02 existente
+  const v = APP.data02.find(x => String(x.ID_ICO) === String(id)) || {};
+  if(v.Decision){
+    setVal('f2_fecha',       v.Fecha_Validacion     || '');
+    setVal('f2_dependencia', v.Dependencia_Valida   || '');
+    setVal('f2_validador',   v.Nombre_Validador     || '');
+    setVal('f2_rol',         v.Rol_Validador        || '');
+    setVal('f2_correo',      v.Correo_Validador     || '');
+    setVal('f2_tipos',       v.Tipos_Evidencia_Revisada || '');
+    setVal('f2_referencia',  v.Referencia_Radicado  || '');
+    setVal('f2_suficiencia', v.Suficiencia_Evidencia || '');
+    setVal('f2_brechas',     v.Brechas              || '');
+    setVal('f2_decision',    v.Decision             || '');
+    setVal('f2_riesgo',      v.Clasificacion_Riesgo || '');
+    setVal('f2_justificacion', v.Justificacion_Tecnica || '');
+    setVal('f2_acciones',    v.Acciones_Requeridas  || '');
+    setVal('f2_plazo',       v.Plazo_Ajustes        || '');
+    setVal('f2_obs',         v.Obs_Auditoria        || '');
+  }
+  box.style.display = 'block';
+  box.innerHTML = `<strong>${esc(r.ID_ICO)}</strong> · ${esc(r.Tipo)} · ${esc(r.Direccion)} · ${esc(r.Area_Equipo)}${v.Decision ? ' · <strong>Ya validado: ' + esc(v.Decision) + '</strong>' : ''}`;
+}
+
+/* ────── BUSCAR PARA EVALUACIÓN ────── */
+function buscarRegistroParaEvaluacion(){
+  const id  = valueOf('f3_lookup');
+  const r   = APP.data01.find(x => String(x.ID_ICO) === String(id));
+  const v   = APP.data02.find(x => String(x.ID_ICO) === String(id));
+  const box = document.getElementById('f3_info');
+  if(!r){ box.style.display='block'; box.textContent='No se encontró el ID_ICO.'; return; }
+  if(!v || v.Decision !== 'Validado'){ box.style.display='block'; box.innerHTML='El registro aún no está <strong>Validado</strong> en I.CO-02.'; return; }
+  // Pre-cargar valores de I.CO-03 existente
+  const e = APP.data03.find(x => String(x.ID_ICO) === String(id)) || {};
+  if(e.Fecha_Evaluacion){
+    setVal('f3_fecha',              e.Fecha_Evaluacion || '');
+    setVal('f3_periodo',            e.Periodo_Evaluado || '');
+    setVal('f3_instancia',          e.Instancia_Evaluadora || '');
+    setVal('f3_acta',               e.Acta_Soporte || '');
+    setVal('f3_uso',                e.Fue_Usado_Decision || '');
+    setVal('f3_tipo_decision',      e.Tipo_Decision || '');
+    setVal('f3_descripcion_decision', e.Descripcion_Decision || '');
+    setVal('f3_nivel',              e.Nivel_Incidencia || '');
+    setVal('f3_soporte',            e.Soporte_Decisional || '');
+    setVal('f3_tiempo',             e.Impacto_Tiempo_Real || '');
+    setVal('f3_costo',              e.Impacto_Costo_Real || '');
+    setVal('f3_calidad',            e.Impacto_Calidad_Real || '');
+    setVal('f3_impacto',            e.Impacto_Institucional || '');
+    setVal('f3_cobertura',          String(e.Dim_Cobertura_C || ''));
+    setVal('f3_hallazgos',          e.D1_Hallazgos || '');
+    setVal('f3_ventajas',           e.D2_Ventajas || '');
+    setVal('f3_desventajas',        e.D3_Desventajas || '');
+    setVal('f3_riesgos',            e.Riesgos_Futuros || '');
+    setVal('f3_nivel_riesgo',       e.Nivel_Riesgo || '');
+    setVal('f3_prioridad',          e.Priorizacion_Institucional || '');
+    setVal('f3_controles',          e.Controles_Mitigacion || '');
+  }
+  box.style.display = 'block';
+  box.innerHTML = `<strong>${esc(r.ID_ICO)}</strong> · ${esc(r.Tipo)} · ${esc(r.Direccion)} · Estado: <strong>Validado</strong>${e.Indice_ICO_Calculado ? ' · Índice I.CO: ' + esc(e.Indice_ICO_Calculado) : ''}`;
+}
+
+/* ────── HELPERS ────── */
+function valueOf(id){ return document.getElementById(id)?.value?.trim() || ''; }
+function setVal(id, val){ const el = document.getElementById(id); if(el) el.value = val; }
+function esc(v){ return String(v||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function estadoBadge(e){
+  if(e==='Validado')        return 'validado';
+  if(e==='Requiere ajustes') return 'ajustes';
+  if(e==='Rechazado')       return 'rechazado';
+  return 'radicado';
+}
+function clearFormICO01(){
+  ['f1_fecha','f1_tipo','f1_direccion','f1_area','f1_proceso','f1_fase','f1_contexto','f1_objetivo',
+   'f1_accion','f1_actores','f1_resultado','f1_evidencias','f1_tiempo','f1_costo','f1_calidad',
+   'f1_replicabilidad','f1_riesgos','f1_recomendacion','f1_nombre','f1_cargo','f1_correo','f1_contacto']
+  .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+}
+
+/* ────── APPS SCRIPT TEMPLATE (para sección Configuración) ────── */
+const APPS_SCRIPT_CODE = `// ════════════════════════════════════════════════
+// Portal I.CO · FFIE · Backend Code.gs
+// Pegar completo en script.google.com
+// ════════════════════════════════════════════════
+
+const SHEETS = {
+  I_CO_01:'I_CO_01', I_CO_02:'I_CO_02', I_CO_03:'I_CO_03',
+  DASHBOARD_SOURCE:'DASHBOARD_SOURCE',
+  FICHAS_VALIDADAS:'FICHAS_VALIDADAS',
+  USUARIOS:'USUARIOS'
+};
+
+function doGet(e){
+  return jsonOut({status:'ok', message:'Portal I.CO backend activo', ts: new Date().toISOString()});
+}
+
+function doPost(e){
+  try{
+    const data   = JSON.parse(e.postData.contents || '{}');
+    const action = data.action || '';
+    if(action === 'login')          return loginUser_(data);
+    if(action === 'append')         return appendRecord_(data.sheet, data.record);
+    if(action === 'upsert')         return upsertRecord_(data.sheet, data.keyField, data.record);
+    if(action === 'sync_dashboard') return syncDashboardAndFichas_(data.id_ico);
+    return jsonOut({status:'error', message:'Acción no reconocida: '+action});
+  }catch(err){
+    return jsonOut({status:'error', message:String(err), stack:err.stack});
+  }
+}
+
+// ── AUTH ──────────────────────────────────────────
+function loginUser_(data){
+  const sh     = SpreadsheetApp.getActive().getSheetByName(SHEETS.USUARIOS);
+  if(!sh) return jsonOut({status:'error', message:'Hoja USUARIOS no encontrada'});
+  const values = sh.getDataRange().getValues();
+  const headers= values.shift();
+  const ix     = idxMap_(headers);
+  const row    = values.find(r =>
+    String(r[ix.usuario]).trim() === String(data.usuario||'').trim() &&
+    String(r[ix.activo]).toUpperCase().trim()  === 'SI'
+  );
+  if(!row) return jsonOut({status:'error', message:'Usuario no existe o está inactivo'});
+  if(String(row[ix.clave]) !== String(data.clave||''))
+    return jsonOut({status:'error', message:'Clave inválida'});
+  return jsonOut({
+    status:'ok',
+    usuario: row[ix.usuario],
+    nombre:  row[ix.nombre],
+    rol:     row[ix.rol],
+    correo:  ix.correo !== undefined ? row[ix.correo] : ''
+  });
+}
+
+// ── CRUD ──────────────────────────────────────────
+function appendRecord_(sheetName, record){
+  const sh = SpreadsheetApp.getActive().getSheetByName(sheetName);
+  if(!sh) throw new Error('Hoja no encontrada: '+sheetName);
+  const headers = sh.getRange(1,1,1,sh.getLastColumn()).getValues()[0];
+  const row = headers.map(h => record[h] !== undefined ? record[h] : '');
+  sh.appendRow(row);
+  return jsonOut({status:'ok', sheet:sheetName, id:record.ID_ICO||''});
+}
+
+function upsertRecord_(sheetName, keyField, record){
+  const sh = SpreadsheetApp.getActive().getSheetByName(sheetName);
+  if(!sh) throw new Error('Hoja no encontrada: '+sheetName);
+  const data   = sh.getDataRange().getValues();
+  const headers= data[0];
+  const keyCol = headers.indexOf(keyField);
+  if(keyCol < 0) throw new Error('Llave '+keyField+' no existe en '+sheetName);
+  const keyValue = record[keyField];
+  let rowIndex = -1;
+  for(let i = 1; i < data.length; i++){
+    if(String(data[i][keyCol]) === String(keyValue)){ rowIndex = i + 1; break; }
+  }
+  const row = headers.map(h => record[h] !== undefined ? record[h] : '');
+  if(rowIndex === -1) sh.appendRow(row);
+  else sh.getRange(rowIndex, 1, 1, headers.length).setValues([row]);
+  return jsonOut({status:'ok', sheet:sheetName, key:keyValue, action: rowIndex===-1?'insert':'update'});
+}
+
+// ── SINCRONIZACIÓN DASHBOARD + FICHAS ─────────────
+function syncDashboardAndFichas_(idIco){
+  const ss = SpreadsheetApp.getActive();
+  const s1 = ss.getSheetByName(SHEETS.I_CO_01);
+  const s2 = ss.getSheetByName(SHEETS.I_CO_02);
+  const s3 = ss.getSheetByName(SHEETS.I_CO_03);
+  const sd = ss.getSheetByName(SHEETS.DASHBOARD_SOURCE);
+  const sf = ss.getSheetByName(SHEETS.FICHAS_VALIDADAS);
+  if(!s1||!s2||!s3||!sd||!sf)
+    return jsonOut({status:'error', message:'Hojas faltantes. Verifique nombres exactos.'});
+
+  const r1 = tableToObjects_(s1);
+  const r2 = tableToObjects_(s2);
+  const r3 = tableToObjects_(s3);
+
+  const DASH_HEADERS = ['ID_ICO','Tipo','Direccion','Area_Equipo','Estado',
+    'Fecha_Registro','Fecha_Validacion','Fecha_Evaluacion','Indice_ICO_Calculado','Fue_Usado_Decision'];
+
+  const base = r1.map(x => {
+    const v = r2.find(y => String(y.ID_ICO) === String(x.ID_ICO)) || {};
+    const e = r3.find(y => String(y.ID_ICO) === String(x.ID_ICO)) || {};
+    return {
+      ID_ICO:               x.ID_ICO,
+      Tipo:                 x.Tipo,
+      Direccion:            x.Direccion,
+      Area_Equipo:          x.Area_Equipo,
+      Estado:               v.Decision || x.Estado || 'Radicado',
+      Fecha_Registro:       x.Fecha_Registro    || '',
+      Fecha_Validacion:     v.Fecha_Validacion  || '',
+      Fecha_Evaluacion:     e.Fecha_Evaluacion  || '',
+      Indice_ICO_Calculado: e.Indice_ICO_Calculado || '',
+      Fue_Usado_Decision:   e.Fue_Usado_Decision  || ''
+    };
+  });
+  rewriteSheet_(sd, DASH_HEADERS, base);
+
+  const FICHA_HEADERS = ['ID_ICO','Tipo','Direccion','Area_Equipo','Resumen',
+    'Estado','Indice_ICO_Calculado','Hallazgos','Ventajas'];
+
+  const fichas = base.filter(x => x.Estado === 'Validado').map(x => {
+    const m1 = r1.find(y => String(y.ID_ICO) === String(x.ID_ICO)) || {};
+    const m3 = r3.find(y => String(y.ID_ICO) === String(x.ID_ICO)) || {};
+    return {
+      ID_ICO:               x.ID_ICO,
+      Tipo:                 m1.Tipo         || '',
+      Direccion:            m1.Direccion    || '',
+      Area_Equipo:          m1.Area_Equipo  || '',
+      Resumen:              m1.B3_Accion    || m1.B1_Contexto || '',
+      Estado:               'Validado',
+      Indice_ICO_Calculado: m3.Indice_ICO_Calculado || '',
+      Hallazgos:            m3.D1_Hallazgos || '',
+      Ventajas:             m3.D2_Ventajas  || ''
+    };
+  });
+  rewriteSheet_(sf, FICHA_HEADERS, fichas);
+
+  return jsonOut({
+    status:'ok',
+    dashboard_rows: base.length,
+    fichas_rows:    fichas.length,
+    id_ico:         idIco || ''
+  });
+}
+
+// ── UTILIDADES ────────────────────────────────────
+function tableToObjects_(sheet){
+  const data    = sheet.getDataRange().getValues();
+  const headers = data.shift();
+  return data
+    .filter(r => r.join('') !== '')
+    .map(r => { const o={}; headers.forEach((h,i)=>o[h]=r[i]); return o; });
+}
+
+function rewriteSheet_(sheet, headers, rows){
+  sheet.clearContents();
+  sheet.getRange(1,1,1,headers.length).setValues([headers]);
+  if(rows.length){
+    const values = rows.map(r => headers.map(h => r[h] !== undefined ? r[h] : ''));
+    sheet.getRange(2,1,values.length,headers.length).setValues(values);
+  }
+}
+
+function idxMap_(headers){
+  const m = {};
+  headers.forEach((h,i) => m[String(h).toLowerCase().trim()] = i);
+  return m;
+}
+
+function jsonOut(obj){
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}`;
+
+/* ────── INIT ────── */
+document.addEventListener('DOMContentLoaded', async () => {
+  document.getElementById('scriptPreview').textContent = APPS_SCRIPT_CODE;
+  loadConfig();
+  loadSession();
+  setToday();
+  await updateAllSheets();
+});
+</script>
+</body>
+</html>
