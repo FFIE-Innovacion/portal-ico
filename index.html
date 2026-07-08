@@ -546,7 +546,7 @@ tbody tr:hover{background:#fafcff}
           <span class="badge bp" style="font-size:13px;padding:6px 12px">Buena Práctica · BP</span>
         </div>
         <h4>Experiencia exitosa, verificable y potencialmente replicable</h4>
-        <p>Se registra cuando una acción, metodología, protocolo o herramienta produce <strong>resultados positivos verificables</strong> y puede institucionalizarse o replicarse en otras dependencias del FFIE.</p>
+        <p>Se registra cuando una acción, metodología, protocolo o herramienta produce <strong>resultados positivos verificables</strong> y puede institucionalizarse o replicarse en otras areas del FFIE.</p>
         <ul>
           <li>Enfatiza <strong>qué funcionó</strong>, cómo se implementó y por qué es sostenible</li>
           <li>Debe demostrar mejora medible: tiempo, costo, calidad o trazabilidad</li>
@@ -566,7 +566,7 @@ tbody tr:hover{background:#fafcff}
         <ul>
           <li>Enfatiza <strong>qué se aprendió</strong>, qué debe corregirse o evitarse</li>
           <li>Puede surgir de problemas, contingencias o limitaciones de coordinación</li>
-          <li>Requiere acción concreta de mejora institucional</li>
+          <li>Requiere acción concreta de mejora a nivel de la Unidad de Gestión</li>
         </ul>
         <div style="background:var(--soft-vino);border:1px solid #f0c8d0;border-radius:10px;padding:12px;margin-top:10px">
           <strong style="font-size:11px;color:var(--vino);text-transform:uppercase;letter-spacing:.05em">Ejemplo FFIE real (Coordinación Innovación y Analítica - DISGI):</strong>
@@ -600,7 +600,7 @@ tbody tr:hover{background:#fafcff}
           Indique exactamente qué debe quedar institucionalizado: ¿un protocolo? ¿una herramienta? ¿un procedimiento? Sea preciso.
         </div>
         <div class="tip-item">
-          <strong>✅ Nombres institucionales</strong>
+          <strong>✅ Nombres en la Unidad de Gestión</strong>
           Use los nombres oficiales de las áreas, procesos y sistemas. Evite siglas no conocidas o nombres informales.
         </div>
       </div>
@@ -741,28 +741,13 @@ tbody tr:hover{background:#fafcff}
             </div>
             <div class="form-group">
               <label>Área / Equipo responsable * <button class="help-btn" onclick="toggleHelp(this)">i</button></label>
-              <select id="f1_area">
-                <option value="">Seleccione</option>
-                <option value="Coordinación Innovación y Analítica de Datos">Coordinación Innovación y Analítica de Datos</option>
-                <option value="Coordinación Gestión de Tecnología">Coordinación Gestión de Tecnología</option>
-                <option value="Coordinación de Mejoramientos Rurales">Coordinación de Mejoramientos Rurales</option>
-                <option value="Coordinaciones Regionales">Coordinaciones Regionales</option>
-                <option value="Coordinación de Liquidaciones">Coordinación de Liquidaciones</option>
-                <option value="Coordinación Apoyo a Litigios">Coordinación Apoyo a Litigios</option>
-                <option value="Coordinación Controversias Contractuales">Coordinación Controversias Contractuales</option>
-                <option value="Coordinación Gestión Contractual">Coordinación Gestión Contractual</option>
-                <option value="Coordinación Gestión Financiera">Coordinación Gestión Financiera</option>
-                <option value="Coordinación Talento Humano">Coordinación Talento Humano</option>
-                <option value="Coordinación Gestión Administrativa">Coordinación Gestión Administrativa</option>
-                <option value="Coordinación Sistema de Gestión">Coordinación Sistema de Gestión</option>
-                <option value="Coordinación de Comunicaciones">Coordinación de Comunicaciones</option>
-              </select>
-              <div class="field-help"><strong>Qué es:</strong> El equipo o coordinación específica dentro de la Dirección.<div class="fh-example">Ej: Coordinación Innovación y Analítica de Datos, Coordinación Gestión de Tecnología, Coordinación Gestión Contractual.</div></div>
+              <input id="f1_area" placeholder="Escriba el nombre del área o equipo responsable">
+              <div class="field-help"><strong>Qué es:</strong> El equipo o coordinación específica dentro de la Dirección.<div class="fh-0example">Ej. Coordinación Innovación y Analítica de Datos</div></div>
             </div>
             <div class="form-group">
               <label>Actividad asociada <button class="help-btn" onclick="toggleHelp(this)">i</button></label>
               <input id="f1_proceso" placeholder="Ej. Seguimiento a contratos de obra">
-              <div class="field-help"><strong>Qué es:</strong> La actividad institucional a la que corresponde la experiencia en el FFIE.<div class="fh-example">Ej. Seguimiento a contratos de obra, estructuración de proyectos, supervisión técnica, gestión documental.</div></div>
+              <div class="field-help"><strong>Qué es:</strong> La actividad en la Unidad de gestión a la que corresponde la experiencia en el FFIE.<div class="fh-example">Ej. Seguimiento a contratos de obra, estructuración de proyectos, supervisión técnica, gestión documental.</div></div>
             </div>
             <div class="form-group">
               <label>Fase del ciclo <button class="help-btn" onclick="toggleHelp(this)">i</button></label>
@@ -796,7 +781,7 @@ tbody tr:hover{background:#fafcff}
             </div>
             <div class="form-group full">
               <label>Actores involucrados <button class="help-btn" onclick="toggleHelp(this)">i</button></label>
-              <textarea id="f1_actores" placeholder="Personas, equipos, dependencias o contratistas que participaron..."></textarea>
+              <textarea id="f1_actores" placeholder="Personas, equipos, areas o contratistas que participaron..."></textarea>
               <div class="field-help"><strong>Qué es:</strong> Quiénes participaron en el diseño, implementación o validación de la experiencia.<div class="fh-example">Ej: "Coordinación Innovación y Analítica DISGI (diseño), 12 supervisores FFIE (implementación), Dirección de Infraestructura (validación de resultados)."</div></div>
             </div>
             <div class="form-group full">
